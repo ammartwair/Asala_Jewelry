@@ -6,10 +6,8 @@ const router = Router();
 
 router.post('/register', authController.register);//Create
 router.post('/login',authController.login);
-/*router.get('/active', categoryController.getActive);
-router.get('/:id', categoryController.getDetails);
-router.patch('/:id', fileUpload(fileType.image).single('image'), categoryController.update);
-router.delete('/:id',categoryController.destroy);*/
+router.patch('/sendCode',authController.sendCode);
+router.patch('/forgotPassword',authController.forgotPassword);
 
 
 export default router;
