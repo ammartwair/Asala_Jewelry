@@ -21,6 +21,9 @@ try {
 		folder: 'Asala_Jewelry/categories',
 	});
 	req.body.image = {secure_url, public_id};
+	req.body.createdBy = req.user._id;
+	req.body.updatedBy = req.user._id;
+
 	const category = await categoryModel.create(req.body);
 
 	return res.json({msg:category});
@@ -70,6 +73,7 @@ export const update = async(req,res)=>{
 	}
 
 	category.status = req.body.status;
+	req.body.updatedBy = req.user._id;
 
 	await category.save();
 	return res.json({msg:"success",category});
@@ -82,7 +86,7 @@ export const destroy = async(req,res)=>{
 	}
 	await cloudinary.uploader.destroy(category.image.public_id);
 	return res.json({msg:"category was successfuly deleted"});
-	
+
 
 
 }

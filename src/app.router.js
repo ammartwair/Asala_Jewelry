@@ -1,6 +1,7 @@
 import connectDB from '../db/connection.js';
 import categoriesRouter from './modules/category/category.router.js';
 import productsRouter from './modules/product/product.router.js';
+import authRouter from './modules/auth/auth.router.js';
 import cors from 'cors';
 
 const initApp = (app, express) => {
@@ -11,6 +12,7 @@ const initApp = (app, express) => {
 		return res.status(200).json({ msg: "success" });
 	})
 	app.use('/categories', categoriesRouter);
+	app.use('/auth', authRouter);
 	app.use('/products', productsRouter);
 
 	app.use('*', (req, res) => {
