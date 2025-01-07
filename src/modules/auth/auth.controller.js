@@ -30,6 +30,11 @@ export const login = async(req,res)=>{
 	if(!user){
 		return res.status(400).json({msg:"Email not found"});
 	}
+
+	if(!user.confirmEmail){
+		return res.status(400).json({msg:"please confirm you email "});
+	}
+
 	const match = await bcrypt.compare(password,user.password);
 
 	if(user.status == "NotActive"){
@@ -76,7 +81,7 @@ export const forgotPassword = async(req,res)=>{
 	user.sendCode = null;
 
 	await user.save();
-	
+
 	return res.status(200).json({msg:"success"});
 
 }
