@@ -7,6 +7,7 @@ import { auth, roles } from "../../middleware/auth.js";
 const router = Router();
 
 router.post('/', auth(endPoints.create), fileUpload(fileType.image).single('image'), productController.create);
+router.get('/',productController.getProducts);
 
 export default router;
 
