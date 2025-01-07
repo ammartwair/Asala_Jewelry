@@ -2,6 +2,8 @@ import connectDB from '../db/connection.js';
 import categoriesRouter from './modules/category/category.router.js';
 import productsRouter from './modules/product/product.router.js';
 import authRouter from './modules/auth/auth.router.js';
+import cartRouter from './modules/cart/cart.router.js';
+
 import cors from 'cors';
 
 const initApp = (app, express) => {
@@ -14,6 +16,8 @@ const initApp = (app, express) => {
 	app.use('/categories', categoriesRouter);
 	app.use('/auth', authRouter);
 	app.use('/products', productsRouter);
+	app.use('/cart', cartRouter);
+
 
 	app.use('*', (req, res) => {
 		return res.status(404).json({ msg: "Page Not Found" });
