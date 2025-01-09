@@ -5,6 +5,35 @@ import { sendEmail } from "../../utls/email.js";
 import { customAlphabet, nanoid } from 'nanoid'
 
 
+export const confirmEmail = async (req, res) => {
+    const { token } = req.query;
+
+    try {
+        // Verify the token
+        const decoded = jwt.verify(token, process.env.EMAIL_CONFIRM_SECRET);
+
+        // Find the user by ID
+        const user = await userModel.findById(decoded.id);
+        if (!user) {
+            return res.status(404).json({ msg: "User not found" });
+        }
+
+        // Check if email is already confirmed
+        if (user.confirmEmail) {
+            return res.status(400).json({ msg: "Email already confirmed" });
+        }
+
+        // Update user's confirmation status
+        user.confirmEmail = true;
+        await user.save();
+
+        return res.status(200).json({ msg: "Email confirmed successfully" });
+    } catch (error) {
+        return res.status(400).json({ msg: "Invalid or expired token" });
+    }
+};
+
+
 export const register = async(req,res)=>{
 	const {userName,email,password} = req.body;
 
@@ -18,7 +47,15 @@ export const register = async(req,res)=>{
 
 	const createUser = await userModel. create({userName, email, password:hashedPassword});
 
-	await sendEmail(email,`Welcome to our website`,`<h2>Welcome to our website ${userName}</h2>`);
+	const token = jwt.sign({ id: createUser._id }, process.env.EMAIL_CONFIRM_SECRET, { expiresIn: '1h' });
+
+	const confirmationUrl = `${process.env.BASE_URL}/api/auth/confirm-email?token=${token}`;
+
+    // Send confirmation email
+    await sendEmail(email, "Confirm Your Email", `<h2>Welcome, ${userName}!</h2>
+        <p>Please confirm your email by clicking the link below:</p>
+        <a href="${confirmationUrl}">Confirm Email</a>
+        <p>This link will expire in 1 hour.</p>`);
 
 	return res.status(201).json({msg:"success",user:createUser});
 
@@ -39,7 +76,6 @@ export const login = async(req,res)=>{
 
 	if(user.status == "NotActive"){
 		return res.status(400).json({msg:"Your account is blocked"});
-
 	}
 
 	if(!match){

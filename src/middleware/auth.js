@@ -35,7 +35,5 @@ export const auth = (accessRole = [])=>{
 
 		 req.user = user;
          next();
-
-
 	}
 }

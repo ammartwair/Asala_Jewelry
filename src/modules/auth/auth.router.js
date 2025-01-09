@@ -8,6 +8,6 @@ router.post('/register', authController.register);//Create
 router.post('/login',authController.login);
 router.patch('/sendCode',authController.sendCode);
 router.patch('/forgotPassword',authController.forgotPassword);
-
+router.get('/confirm-email', authController.confirmEmail);
 
 export default router;
