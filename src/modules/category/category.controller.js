@@ -85,5 +85,5 @@ export const destroy = async(req,res)=>{
 		return res.status(404).json({message:"Category not found"});
 	}
 	await cloudinary.uploader.destroy(category.image.public_id);
-	return res.json({msg:"category was successfuly deleted"});
+	return res.json({msg:"Category was successfuly deleted"});
 }

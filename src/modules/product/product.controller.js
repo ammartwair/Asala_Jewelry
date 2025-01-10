@@ -5,6 +5,7 @@ import { pagination } from "../../utls/pagination.js";
 import cloudinary from "../../utls/cloudinary.js";
 
 export const create = async (req, res) => {
+  console.log(req.image);
   const { name, categoryId } = req.body;
 
   const checkCategory = await categoryModel.findById(categoryId);
@@ -45,9 +46,20 @@ export const getProducts = async (req, res) => {
 
   const mongooseQuery = productModel
     .find(queryObj)
-    .skip(skip)
-    .limit(limit)
-    .select("name price");
-  const products = await mongooseQuery.sort("price").select("name price");
+    // .skip(skip)
+    // .limit(limit)
+    .select("name price categoryId image");
+  const products = await mongooseQuery
+    .sort("price")
+    .select("name price categoryId image description");
   return res.status(200).json({ msg: "success", products });
+};
+
+export const destroy = async (req, res) => {
+  const product = await productModel.findByIdAndDelete(req.params.id);
+  if (!product) {
+    return res.status(404).json({ message: "Product not found" });
+  }
+  await cloudinary.uploader.destroy(product.image.public_id);
+  return res.json({ msg: "Product was successfuly deleted" });
 };
