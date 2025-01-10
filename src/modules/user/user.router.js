@@ -6,6 +6,6 @@ import { endPoints } from "./user.role.js";
 const router = Router();
 
 router.get('/',auth(endPoints.getUsers),userController.getUsers);
-router.get('/userData',auth(endPoints.userData),userController.getUserDate);
+router.get('/userData',auth(endPoints.getUserDate),userController.getUserDate);
 
 export default router;
